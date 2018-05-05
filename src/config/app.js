@@ -8,11 +8,9 @@ app.on('connection', (client) => {
     console.log('Connected to socket.io, Client Id: ' + client.id);
     client.on('getMissions', async () => {
         let greenTaxiTripData = await missionsServices.parseAndSortCsvFile();
-        setInterval( async () => {
-            const activeMissions = await missionsServices.getMissions(greenTaxiTripData);
-            if(activeMissions.emit) {
-                client.emit('missions', activeMissions.missions);
-            }
+        setInterval(() => {
+            missionsServices.findStartingMissons({ client, data: greenTaxiTripData });
+            missionsServices.findFinishedMissions({ client });
         }, 1000);
     });
     

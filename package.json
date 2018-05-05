@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "async": "^2.6.0",
     "fast-csv": "^2.4.1",
     "moment": "^2.22.1",
     "request": "^2.85.0",
