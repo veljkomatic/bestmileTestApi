@@ -9,8 +9,10 @@ app.on('connection', (client) => {
     client.on('getMissions', async () => {
         let greenTaxiTripData = await missionsServices.parseAndSortCsvFile();
         setInterval( async () => {
-            const missions = await missionsServices.getMissions(greenTaxiTripData);
-            client.emit('missions', missions);
+            const activeMissions = await missionsServices.getMissions(greenTaxiTripData);
+            if(activeMissions.emit) {
+                client.emit('missions', activeMissions.missions);
+            }
         }, 1000);
     });
     

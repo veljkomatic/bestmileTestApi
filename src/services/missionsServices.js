@@ -22,9 +22,9 @@ const findStartingMissons = (data) => {
 const findRouteForStartingMissions = async (startingMissions) => {
     for(let startingMission of startingMissions) {
         try {
-            const response = await externalServices.OSRMGetRoute(`${startingMission.Pickup_longitude},${startingMission.Pickup_latitude};${startingMission.Dropoff_longitude},${startingMission.Dropoff_latitude}`);
+            const response = await externalServices.GoogleGetRoute(startingMission.Pickup_latitude, startingMission.Pickup_longitude, startingMission.Dropoff_latitude, startingMission.Dropoff_longitude);
             const res = JSON.parse(response);
-            startingMission.routes = res.routes;
+            startingMission.routes = res;
             missions.push(startingMission);
         } catch (error) {
             console.log('Error', error);
@@ -62,10 +62,15 @@ module.exports = {
         });
     },
     getMissions: async (data) => {
+        const missionLength = missions.length;
         date.setSeconds(date.getSeconds() + 1);
         const startingMissions = findStartingMissons(data);
         await findRouteForStartingMissions(startingMissions);
         activeMissions();
-        return missions;
+        const aMissions = {
+            missions,
+            emit: missionLength - missions.length === 0 ? false : true
+        }
+        return aMissions;
     }
 }
