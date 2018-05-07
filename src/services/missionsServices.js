@@ -3,6 +3,7 @@ const csv = require('fast-csv');
 const path = require('path');
 
 const externalServices = require('./externalServices');
+const mapper = require('./mappers/mapGoogleRoute');
 
 const date = new Date('01/01/2016 06:00:00 AM');
 
@@ -88,8 +89,8 @@ module.exports = {
             const pickupDate = new Date(el.lpep_pickup_datetime);
             if(pickupDate.getTime() === date.getTime()) {
                 const response = await externalServices.GoogleGetRoute(el.Pickup_latitude, el.Pickup_longitude, el.Dropoff_latitude, el.Dropoff_longitude);
-                const res = JSON.parse(response);
-                const startingMission = Object.assign({}, el, { computeRoutes: res });
+                const googleRoute = mapper.mapGoogleRoute(response);
+                const startingMission = Object.assign({}, el, { computeRoutes: googleRoute });
                 ctx.client.emit('newStartingMission', startingMission);
                 activeMissions.push(startingMission);
             }

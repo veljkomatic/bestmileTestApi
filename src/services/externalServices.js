@@ -1,4 +1,13 @@
 const request = require('request-promise');
+const googleMap = require('@google/maps');
+const polyline = require('polyline');
+
+const keys = require('../config/keys');
+
+const googleMapClient = googleMap.createClient({
+    key: keys.googleApiKey,
+    Promise: Promise
+});
 
 module.exports = {
     // OSRMGetRoute: async (coordinates) => {
@@ -9,11 +18,16 @@ module.exports = {
     //     return request(options);
     // }
     GoogleGetRoute: async (originLat, originLong, destinationLat, destinationLong) => {
-        const options = {
-            method: 'GET',
-            url: `https://maps.googleapis.com/maps/api/directions/json?origin=${originLat},${originLong}&destination=${destinationLat},${destinationLong}&key=AIzaSyCMF_f2JNNOBQUGyzQ7x5cwXELCj6GhTJI`
-        };
-        return request(options);
+        try {
+            const response = await googleMapClient.directions({
+                origin: `${originLat},${originLong}`,
+                destination: `${destinationLat},${destinationLong}`,
+                mode: 'driving',
+            }).asPromise();
+            return response.json;
+        } catch(e) {
+            console.log('ERROR ', e);
+        }
     }
-};
+}; 
 
