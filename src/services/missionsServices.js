@@ -9,38 +9,6 @@ const date = new Date('01/01/2016 06:00:00 AM');
 
 let activeMissions = [];
 
-// const findStartingMissons = (data) => {
-//     const startingMissions = [];
-//     data = data.filter((element) => {
-//         if(new Date(element.lpep_pickup_datetime).getTime() === date.getTime()) {
-//             startingMissions.push(element)
-//         }
-//         return new Date(element.lpep_pickup_datetime).getTime() >= date.getTime()
-//     });
-//     return startingMissions;
-// };
-
-// const findRouteForStartingMissions = async (startingMissions) => {
-//     for(let startingMission of startingMissions) {
-//         try {
-//             const response = await externalServices.GoogleGetRoute(startingMission.Pickup_latitude, startingMission.Pickup_longitude, startingMission.Dropoff_latitude, startingMission.Dropoff_longitude);
-//             const res = JSON.parse(response);
-//             startingMission.routes = res;
-//             missions.push(startingMission);
-//         } catch (error) {
-//             console.log('Error', error);
-//         }
-//     }
-// }
-
-// const getActiveMissions = () => {
-//     missions = missions.filter((element) => {
-//         const pickupDate = new Date(element.lpep_pickup_datetime);
-//         const dropoffDate = new Date(element.Lpep_dropoff_datetime);
-//         return pickupDate.getTime() <= date.getTime() && dropoffDate >= date.getTime();
-//     });
-// }
-
 module.exports = {
     parseAndSortCsvFile: () => {
         return new Promise((resolve, reject) => {
@@ -62,18 +30,6 @@ module.exports = {
             stream.pipe(csvStream);
         });
     },
-    // getMissions: async (data) => {
-    //     const missionLength = missions.length;
-    //     date.setSeconds(date.getSeconds() + 1);
-    //     const startingMissions = findStartingMissons(data);
-    //     await findRouteForStartingMissions(startingMissions);
-    //     getActiveMissions();
-    //     const aMissions = {
-    //         missions,
-    //         emit: missionLength - missions.length === 0 ? false : true
-    //     }
-    //     return aMissions;
-    // },
     findFinishedMissions: (ctx) => {
         activeMissions = activeMissions.filter((el) => {
             const dropoffDate = new Date(el.Lpep_dropoff_datetime);
