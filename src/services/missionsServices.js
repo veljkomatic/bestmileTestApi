@@ -15,7 +15,7 @@ module.exports = {
     parseAndSortCsvFile: () => {
         return new Promise((resolve, reject) => {
             const greenTaxiTripData = [];
-            const stream = fs.createReadStream(path.join(__dirname, '/2016_Green_Taxi_Trip_Data.csv'));
+            const stream = fs.createReadStream(path.join(__dirname, 'data/2016_Green_Taxi_Trip_Data.csv'));
             const csvStream = csv
             .parse({ headers: true })
             .on('data', function(data){
@@ -36,7 +36,7 @@ module.exports = {
         activeMissions = activeMissions.filter((el) => {
             const dropoffDate = new Date(el.Lpep_dropoff_datetime);
             if(dropoffDate < date.getTime()) {
-                ctx.client.emit('finishedMission', el);
+                ctx.socket.emit('finishedMission', el);
             }
             return dropoffDate >= date.getTime();
         });
@@ -56,7 +56,7 @@ module.exports = {
                         computeRoutes: googleRoute
                     }
                 );
-                ctx.client.emit('newStartingMission', startingMission);
+                ctx.socket.emit('newStartingMission', startingMission);
                 activeMissions.push(startingMission);
             }
             return pickupDate.getTime() >= date.getTime()
