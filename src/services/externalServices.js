@@ -20,7 +20,7 @@ module.exports = {
             }).asPromise();
             return response.json;
         } catch(e) {
-            logger.error(`GoogleGetRoute ERROR: ${JSON.stringify(e)}`);
+            logger.info(`GoogleGetRoute ERROR: ${JSON.stringify(e)}`);
         }
     }
 };

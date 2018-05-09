@@ -5,6 +5,7 @@ const uniqid = require('uniqid');
 
 const externalServices = require('./externalServices');
 const mapper = require('./mappers/mapGoogleRoute');
+const validation = require('./validation/validator');
 
 const date = new Date('01/01/2016 06:00:00 AM');
 
@@ -44,7 +45,7 @@ module.exports = {
         date.setSeconds(date.getSeconds() + 1);
         ctx.data = ctx.data.filter(async (el) => {
             const pickupDate = new Date(el.lpep_pickup_datetime);
-            if(pickupDate.getTime() === date.getTime()) {
+            if((pickupDate.getTime() === date.getTime()) && validation.validateMission(el)) {
                 const response = await externalServices.GoogleGetRoute(el.Pickup_latitude, el.Pickup_longitude, el.Dropoff_latitude, el.Dropoff_longitude);
                 const googleRoute = mapper.mapGoogleRoute(response);
                 const startingMission = Object.assign(
