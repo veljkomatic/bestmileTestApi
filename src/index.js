@@ -1,5 +1,5 @@
-var http = require('http');
-var app = require('express')();
+const http = require('http');
+const app = require('express')();
 const httpServer = http.createServer(app);
 
 const io = require('socket.io').listen(httpServer);
