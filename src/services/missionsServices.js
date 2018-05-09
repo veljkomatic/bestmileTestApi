@@ -1,6 +1,7 @@
 const fs = require('fs');
 const csv = require('fast-csv');
 const path = require('path');
+const uniqid = require('uniqid');
 
 const externalServices = require('./externalServices');
 const mapper = require('./mappers/mapGoogleRoute');
@@ -46,7 +47,14 @@ module.exports = {
             if(pickupDate.getTime() === date.getTime()) {
                 const response = await externalServices.GoogleGetRoute(el.Pickup_latitude, el.Pickup_longitude, el.Dropoff_latitude, el.Dropoff_longitude);
                 const googleRoute = mapper.mapGoogleRoute(response);
-                const startingMission = Object.assign({}, el, { computeRoutes: googleRoute });
+                const startingMission = Object.assign(
+                    {}, 
+                    el, 
+                    {
+                        id: uniqid(),
+                        computeRoutes: googleRoute
+                    }
+                );
                 ctx.client.emit('newStartingMission', startingMission);
                 activeMissions.push(startingMission);
             }
