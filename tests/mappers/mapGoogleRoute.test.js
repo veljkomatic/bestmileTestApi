@@ -2,7 +2,7 @@ const expect = require('expect');
 const decodeGoogleMapPolyline = require('decode-google-map-polyline');
 
 const mother = require('./mother');
-const mapper = require('../../../src/services/mappers/mapGoogleRoute');
+const mapper = require('../../src/services/mappers/mapGoogleRoute');
 
 describe('issueService.issuesGet', () => {
     it('should return all issues', async () => {
