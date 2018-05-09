@@ -1,7 +1,5 @@
-const http = require('http');
 const app = require('express')();
-const httpServer = http.createServer(app);
-
+const httpServer = require('http').Server(app)
 const io = require('socket.io').listen(httpServer);
 const logger = require('winston');
 
