@@ -23,5 +23,4 @@ module.exports = {
             logger.error(`GoogleGetRoute ERROR: ${JSON.stringify(e)}`);
         }
     }
-}; 
-
+};
