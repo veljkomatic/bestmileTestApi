@@ -36,7 +36,7 @@ module.exports = {
         });
     },
     findFinishedMissions: (ctx) => {
-        logger.info('Missions Services - Find Finished Mission');
+        logger.info('Missions Services - Find Finished Mission And Remove It From Active Missions');
         activeMissions = activeMissions.filter((el) => {
             const dropoffDate = new Date(el.Lpep_dropoff_datetime);
             if(dropoffDate.getTime() < date.getTime()) {
