@@ -12,6 +12,7 @@
   "dependencies": {
     "@google/maps": "^0.4.6",
     "decode-google-map-polyline": "^1.0.1",
+    "express": "^4.16.3",
     "fast-csv": "^2.4.1",
     "moment": "^2.22.1",
     "polyline": "^0.2.0",
