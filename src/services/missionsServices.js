@@ -39,10 +39,10 @@ module.exports = {
         logger.info('Missions Services - Find Finished Mission');
         activeMissions = activeMissions.filter((el) => {
             const dropoffDate = new Date(el.Lpep_dropoff_datetime);
-            if(dropoffDate < date.getTime()) {
+            if(dropoffDate.getTime() < date.getTime()) {
                 ctx.socket.emit('finishedMission', sanitize.sanitizeMissionResponse(el));
             }
-            return dropoffDate >= date.getTime();
+            return dropoffDate.getTime() >= date.getTime();
         });
     },
     findStartingMissons: (ctx) => {
