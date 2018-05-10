@@ -2,10 +2,12 @@ const fs = require('fs');
 const csv = require('fast-csv');
 const path = require('path');
 const uniqid = require('uniqid');
+const logger = require('winston');
 
 const externalServices = require('./externalServices');
 const mapper = require('./mappers/mapGoogleRoute');
 const validation = require('./validation/validator');
+const sanitize = require('./sanitizing/sanitizeMission');
 
 const date = new Date('01/01/2016 06:00:00 AM');
 
@@ -13,6 +15,7 @@ let activeMissions = [];
 
 module.exports = {
     parseAndSortCsvFile: () => {
+        logger.info(`Missions Services - Parse And Sort CSV File`);
         return new Promise((resolve, reject) => {
             const greenTaxiTripData = [];
             const stream = fs.createReadStream(path.join(__dirname, 'data/2016_Green_Taxi_Trip_Data.csv'));
@@ -33,15 +36,17 @@ module.exports = {
         });
     },
     findFinishedMissions: (ctx) => {
+        logger.info('Missions Services - Find Finished Mission');
         activeMissions = activeMissions.filter((el) => {
             const dropoffDate = new Date(el.Lpep_dropoff_datetime);
             if(dropoffDate < date.getTime()) {
-                ctx.socket.emit('finishedMission', el);
+                ctx.socket.emit('finishedMission', sanitize.sanitizeMissionResponse(el));
             }
             return dropoffDate >= date.getTime();
         });
     },
     findStartingMissons: (ctx) => {
+        logger.info('Missions Services - Find Starting Mission And Remove It From Data');
         date.setSeconds(date.getSeconds() + 1);
         ctx.data = ctx.data.filter(async (el) => {
             const pickupDate = new Date(el.lpep_pickup_datetime);
@@ -56,7 +61,7 @@ module.exports = {
                         computeRoutes: googleRoute
                     }
                 );
-                ctx.socket.emit('newStartingMission', startingMission);
+                ctx.socket.emit('newStartingMission', sanitize.sanitizeMissionResponse(startingMission));
                 activeMissions.push(startingMission);
             }
             return pickupDate.getTime() >= date.getTime()

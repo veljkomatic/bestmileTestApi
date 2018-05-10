@@ -1,7 +1,9 @@
 const decodeGoogleMapPolyline = require('decode-google-map-polyline');
+const logger = require('winston');
 
 module.exports = {
     mapGoogleRoute: (googleDirection) => {
+        logger.info('Google Route Mapper (Adapter) - Decode Google Polyline To Get Path For Direction Render (CLIENT)');
         const routes = googleDirection.routes;
         const newRoutes = routes.map((route) => {
             const bounds = route.bounds;
